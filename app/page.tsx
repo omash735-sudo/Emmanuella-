@@ -1,28 +1,27 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import LoadingScreen from '@/app/components/LoadingScreen'
-import IntroSection from '@/app/components/IntroSection'
-import PersonalMessage from '@/app/components/PersonalMessage'
-import MusicSection from '@/app/components/MusicSection'
-import MomentsSection from '@/app/components/MomentsSection'
-import GiftCards from '@/app/components/GiftCards'
-import ReasonsSection from '@/app/components/ReasonsSection'
-import EndingScene from '@/app/components/EndingScene'
-import PostCredits from '@/app/components/PostCredits'
-import FloatingMusicPlayer from '@/app/components/FloatingMusicPlayer'
+import LoadingScreen from './components/LoadingScreen'
+import IntroSection from './components/IntroSection'
+import PersonalMessage from './components/PersonalMessage'
+import MusicSection from './components/MusicSection'
+import MomentsSection from './components/MomentsSection'
+import GiftCards from './components/GiftCards'
+import ReasonsSection from './components/ReasonsSection'
+import EndingScene from './components/EndingScene'
+import PostCredits from './components/PostCredits'
+import FloatingMusicPlayer from './components/FloatingMusicPlayer'
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
   const [showMusicPlayer, setShowMusicPlayer] = useState(false)
 
   useEffect(() => {
-    // Simulate loading
     const timer = setTimeout(() => {
       setLoading(false)
     }, 3000)
 
-    return () => clearTimeout(timer)
+    return () => clearInterval(timer)
   }, [])
 
   if (loading) {
