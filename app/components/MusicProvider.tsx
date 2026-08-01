@@ -4,10 +4,13 @@ import { createContext, useContext, useState, useRef, useEffect, ReactNode } fro
 import YouTube, { YouTubeEvent, YouTubePlayer } from 'react-youtube'
 import { content } from '@/config/content'
 
+// Define Types
+type Song = typeof content.music.songs[number];
+
 interface MusicContextValue {
-  songs: typeof content.music.songs
+  songs: Song[]
   currentSongIndex: number | null
-  currentSong: typeof content.music.songs[number] | null
+  currentSong: Song | null
   isPlaying: boolean
   progress: number
   duration: number
@@ -91,7 +94,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
 
   const playPreferredOrRandom = () => {
     const songs = content.music.songs
-    const preferredIndex = songs.findIndex((s) =>
+    const preferredIndex = songs.findIndex((s: Song) =>
       s.title.toLowerCase().includes('save our song')
     )
     const index = preferredIndex !== -1
@@ -111,7 +114,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
   const handlePlayerReady = (event: YouTubeEvent) => {
     playerRef.current = event.target
     setPlayerReady(true)
-    event.target.playVideo()
+    // Note: Autoplay might be blocked by browsers; manual trigger is safer
   }
 
   const handlePlayerStateChange = (event: YouTubeEvent) => {
