@@ -101,6 +101,12 @@ export default function MusicSection({ onMusicStart }: MusicSectionProps) {
     }
   }
 
+  // Fixed: Added proper type for error handler
+  const handlePlayerError = (e: { target: any; data: any }) => {
+    console.error('YouTube Player Error:', e)
+    setIsPlaying(false)
+  }
+
   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
     if (playerRef.current && duration > 0) {
       const rect = e.currentTarget.getBoundingClientRect()
@@ -186,11 +192,11 @@ export default function MusicSection({ onMusicStart }: MusicSectionProps) {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-rose-700 mb-3">
-            🎵 Soundtrack To This Little Adventure
+            {content.music.title}
           </h2>
           <div className="w-20 h-px bg-gradient-to-r from-transparent via-rose-300 to-transparent mx-auto" />
           <p className="text-sm text-rose-400 mt-3 font-light tracking-wide">
-            A playlist made just for you ❤️
+            {content.music.subtitle}
           </p>
         </motion.div>
 
@@ -395,10 +401,7 @@ export default function MusicSection({ onMusicStart }: MusicSectionProps) {
               }}
               onReady={handlePlayerReady}
               onStateChange={handlePlayerStateChange}
-              onError={(e) => {
-                console.error('YouTube Player Error:', e)
-                setIsPlaying(false)
-              }}
+              onError={handlePlayerError}
               className="w-0 h-0 opacity-0"
             />
           </div>
