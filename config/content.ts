@@ -1,3 +1,71 @@
+interface Content {
+  personalMessage: string;
+  music: {
+    title: string;
+    subtitle: string;
+    songs: {
+      id: string;
+      title: string;
+      artist: string;
+      videoId: string;
+      thumbnail: string;
+      isSpecial: boolean;
+      specialBadge?: string;
+      duration: string;
+      year: number;
+      genre: string;
+    }[];
+  };
+  moments: {
+    title: string;
+    subtitle: string;
+    photos: {
+      id: number;
+      src: string;
+      caption: string;
+      date: string;
+      location: string;
+    }[];
+  };
+  gifts: {
+    title: string;
+    subtitle: string;
+    items: {
+      id: string;
+      title: string;
+      icon: string;
+      revealContent: string;
+      color: string;
+      emoji: string;
+    }[];
+  };
+  reasons: {
+    title: string;
+    subtitle: string;
+    items: string[];
+  };
+  ending: {
+    title: string;
+    message: string;
+    finalWords: string;
+  };
+  credits: {
+    title: string;
+    items: {
+      label: string;
+      value: string;
+      isItalic?: boolean;
+    }[];
+    footer: string;
+  };
+  branding: {
+    giftTitle: string;
+    giftSubtitle: string;
+    authorName: string;
+    authorEmoji: string;
+  };
+}
+
 export const content: Content = {
   personalMessage: `I wish I could spoil you with everything you deserve today, but life has me saving every little bit right now.
 
