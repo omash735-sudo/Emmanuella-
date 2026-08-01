@@ -142,3 +142,40 @@ export default function GiftCards() {
                       </>
                     ) : (
                       <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5, type: "spring", stiffness: 120 }}
+                        className="text-center"
+                      >
+                        <motion.div
+                          className="text-5xl mb-4"
+                          animate={{
+                            rotate: [0, -10, 10, -10, 0],
+                            scale: [1, 1.1, 1]
+                          }}
+                          transition={{
+                            duration: 1.5,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        >
+                          🎉
+                        </motion.div>
+                        <p className="text-rose-800 font-light text-sm leading-relaxed">
+                          {gift.revealContent}
+                        </p>
+                        <div className="mt-4 text-rose-300 text-xs">
+                          ❤️ A gift from my heart
+                        </div>
+                      </motion.div>
+                    )}
+                  </div>
+                </motion.div>
+              </motion.div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
