@@ -54,14 +54,16 @@ export default function GiftCards() {
           className="text-center mb-10"
         >
           <h2 className="text-3xl md:text-4xl font-light text-rose-700 mb-3">
-            🎁 Your Gifts Are Waiting
+            {content.gifts.title}
           </h2>
           <div className="w-16 h-px bg-gradient-to-r from-transparent via-rose-300 to-transparent mx-auto" />
-          <p className="text-sm text-rose-400 mt-3 font-light">Tap to unwrap each surprise</p>
+          <p className="text-sm text-rose-400 mt-3 font-light">
+            {content.gifts.subtitle}
+          </p>
         </motion.div>
 
         <div className="grid gap-5 md:grid-cols-3">
-          {content.gifts.map((gift, index) => {
+          {content.gifts.items.map((gift, index) => {
             const isRevealed = revealedGifts.includes(gift.id)
             
             return (
@@ -95,7 +97,6 @@ export default function GiftCards() {
                   }`}>
                     {!isRevealed ? (
                       <>
-                        {/* Gift Box Animation */}
                         <motion.div
                           className="relative"
                           animate={{
@@ -165,7 +166,7 @@ export default function GiftCards() {
                           {gift.revealContent}
                         </p>
                         <div className="mt-4 text-rose-300 text-xs">
-                          ❤️ A gift from my heart
+                          {gift.emoji || '❤️ A gift from my heart'}
                         </div>
                       </motion.div>
                     )}
