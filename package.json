@@ -2,29 +2,78 @@
   "name": "girlfriends-day-gift",
   "version": "1.0.0",
   "private": true,
+  "description": "A magical interactive gift experience for Girlfriend's Day. Digital storybook with memories, music, and surprises.",
+  "author": "Your Man ❤️",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky install"
   },
   "dependencies": {
+    "@next/font": "^14.0.4",
+    "framer-motion": "^10.16.16",
+    "gsap": "^3.12.4",
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18",
-    "framer-motion": "^10.16.16",
-    "gsap": "^3.12.4",
     "react-intersection-observer": "^9.5.3"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
     "postcss": "^8",
+    "prettier": "^3.1.1",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18.17.0",
+    "npm": ">=9.6.0"
+  },
+  "browserslist": [
+    "defaults",
+    "not ie 11",
+    "not dead",
+    "last 2 versions",
+    "> 0.5%"
+  ],
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,md,json}": [
+      "prettier --write"
+    ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "printWidth": 100,
+    "plugins": []
+  },
+  "eslintConfig": {
+    "extends": [
+      "next/core-web-vitals",
+      "prettier"
+    ]
   }
 }
