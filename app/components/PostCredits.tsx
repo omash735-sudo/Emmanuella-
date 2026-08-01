@@ -4,12 +4,7 @@ import { motion } from 'framer-motion'
 import { content } from '@/config/content'
 
 export default function PostCredits() {
-  const credits = [
-    { label: 'Directed by', value: content.credits.directedBy },
-    { label: '', value: content.credits.createdWith },
-    { label: 'Produced for', value: content.credits.producedFor },
-    { label: 'Special thanks', value: content.credits.specialThanks },
-  ]
+  const credits = content.credits.items
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center px-4 py-16 overflow-hidden">
@@ -41,6 +36,21 @@ export default function PostCredits() {
         </motion.div>
       ))}
 
+      {/* Film Reel Decoration */}
+      <motion.div
+        className="text-6xl mb-10"
+        animate={{
+          rotate: [0, 360]
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+      >
+        🎬
+      </motion.div>
+
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -48,21 +58,6 @@ export default function PostCredits() {
         viewport={{ once: true }}
         className="relative z-10 max-w-md w-full text-center"
       >
-        {/* Film Reel Decoration */}
-        <motion.div
-          className="text-5xl mb-8"
-          animate={{
-            rotate: [0, 360]
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        >
-          🎬
-        </motion.div>
-
         {credits.map((credit, index) => (
           <motion.div
             key={index}
@@ -78,7 +73,7 @@ export default function PostCredits() {
               </p>
             )}
             <p className={`text-lg md:text-xl text-rose-700 font-light mt-1 ${
-              credit.label === '' ? 'text-rose-400 text-sm italic' : ''
+              credit.isItalic ? 'text-rose-400 text-sm italic' : ''
             }`}>
               {credit.value}
             </p>
@@ -106,7 +101,7 @@ export default function PostCredits() {
               ease: "easeInOut"
             }}
           >
-            ❤️ The End ❤️
+            {content.credits.title}
           </motion.p>
           
           <motion.div
@@ -125,7 +120,7 @@ export default function PostCredits() {
           </motion.div>
           
           <p className="text-xs text-rose-300 mt-4 tracking-widest font-light">
-            Made with love • 2025
+            {content.credits.footer}
           </p>
         </motion.div>
       </motion.div>
