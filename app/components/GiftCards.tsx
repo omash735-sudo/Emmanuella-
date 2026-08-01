@@ -3,8 +3,8 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { content } from '@/config/content'
+import { Gift, Sparkles } from 'lucide-react'
 
-// Explicit type for map loops
 type GiftItem = typeof content.gifts.items[number];
 
 export default function GiftCards() {
@@ -18,24 +18,39 @@ export default function GiftCards() {
     )
   }
 
+  // 🎲 "Surprise Me" Function - Makes it lively!
+  const handleSurpriseMe = () => {
+    const availableGifts = content.gifts.items.filter(g => !revealedGifts.includes(g.id));
+    if (availableGifts.length === 0) {
+      // If all are revealed, reset them all to start over
+      setRevealedGifts([]);
+      return;
+    }
+    const randomGift = availableGifts[Math.floor(Math.random() * availableGifts.length)];
+    toggleGift(randomGift.id);
+  }
+
+  // Random tilt angles for the Polaroid look
+  const getTilt = (index: number) => {
+    const tilts = [-3, 2, -4, 3, -2, 4];
+    return tilts[index % tilts.length];
+  }
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 py-16 overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center px-4 py-16 overflow-hidden bg-[#faf5f5]">
       <div className="absolute inset-0 bg-gradient-to-b from-rose-50/30 via-white to-pink-50/30" />
       
       {[...Array(10)].map((_, i) => (
         <motion.div
           key={`sparkle-${i}`}
           className="absolute text-2xl text-yellow-300/20 pointer-events-none"
-          style={{
-            left: `${5 + Math.random() * 90}%`,
-            top: `${5 + Math.random() * 90}%`
-          }}
+          style={{ left: `${5 + Math.random() * 90}%`, top: `${5 + Math.random() * 90}%` }}
           animate={{ scale: [0, 1, 0], opacity: [0, 0.5, 0], rotate: [0, 180, 360] }}
           transition={{ duration: 3 + Math.random() * 3, repeat: Infinity, delay: Math.random() * 4 }}
         >✨</motion.div>
       ))}
 
-      <div className="relative z-10 max-w-4xl w-full">
+      <div className="relative z-10 max-w-5xl w-full">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -48,40 +63,104 @@ export default function GiftCards() {
           <p className="text-sm text-rose-400 mt-3 font-light">{content.gifts.subtitle}</p>
         </motion.div>
 
-        <div className="grid gap-5 md:grid-cols-3">
+        {/* 🎲 SURPRISE ME BUTTON - Makes it interactive */}
+        <div className="flex justify-center mb-10">
+          <motion.button
+            onClick={handleSurpriseMe}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-6 py-3 bg-white/60 backdrop-blur-md text-[#ff4d6d] border border-[#ff4d6d]/30 rounded-full shadow-lg flex items-center gap-2 font-medium transition-all hover:bg-white hover:shadow-xl"
+          >
+            <Sparkles size={18} />
+            Surprise Me!
+          </motion.button>
+        </div>
+
+        {/* POLAROID GRID - Mimicking the ProductCard structure */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto">
           {content.gifts.items.map((gift: GiftItem, index: number) => {
             const isRevealed = revealedGifts.includes(gift.id)
+            const tilt = getTilt(index);
             
             return (
               <motion.div
                 key={gift.id}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.15 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
+                className="group relative perspective-800"
+                style={{ transform: `rotate(${tilt}deg)` }}
+                whileHover={{ 
+                  scale: 1.05, 
+                  rotate: 0, 
+                  transition: { duration: 0.2 } 
+                }}
               >
-                <motion.div
-                  className="relative cursor-pointer bg-white/70 backdrop-blur-sm rounded-2xl p-6 min-h-[200px] flex flex-col items-center justify-center shadow-lg border border-white/40"
-                  whileHover={{ y: -8, scale: 1.02, boxShadow: "0 20px 25px -5px rgb(244 63 94 / 0.2)" }}
-                  whileTap={{ scale: 0.95 }}
+                {/* The Polaroid Card */}
+                <div 
+                  className="relative bg-white rounded-lg shadow-xl overflow-hidden cursor-pointer border border-gray-100 pb-4 transition-shadow hover:shadow-2xl"
                   onClick={() => toggleGift(gift.id)}
                 >
-                  <AnimatePresence mode="wait">
+                  {/* Top Section: The Image / Icon Area */}
+                  <div className="relative h-48 sm:h-56 bg-gradient-to-br from-rose-100 to-pink-100 flex items-center justify-center">
+                    {/* Status Badge (Closed/Open) */}
+                    <div className={`absolute top-3 left-3 px-2 py-1 rounded-full text-[10px] font-bold z-10 shadow-md flex items-center gap-1 ${isRevealed ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'}`}>
+                      {isRevealed ? <Sparkles size={12} /> : <Gift size={12} />}
+                      {isRevealed ? 'Opened!' : 'Unopened'}
+                    </div>
+
+                    {/* Center Icon */}
                     {!isRevealed ? (
-                      <motion.div key="closed" exit={{ opacity: 0, scale: 0.8 }} className="text-center flex flex-col items-center">
-                        <div className="text-6xl mb-3">{gift.icon}</div>
-                        <h3 className="text-xl font-light text-rose-700 text-center mt-2">{gift.title}</h3>
-                        <div className="mt-4 text-rose-400 text-sm animate-pulse">Tap to open ✨</div>
+                      <motion.div 
+                        className="text-7xl drop-shadow-md"
+                        animate={{ rotate: [0, -5, 5, 0] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                      >
+                        {gift.icon}
                       </motion.div>
                     ) : (
-                      <motion.div key="open" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="text-center">
-                        <div className="text-5xl mb-4 animate-bounce">🎉</div>
-                        <p className="text-rose-800 font-light text-sm leading-relaxed">{gift.revealContent}</p>
-                        <div className="mt-4 text-rose-300 text-xs">{gift.emoji || '❤️'}</div>
+                      <motion.div 
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        className="text-7xl"
+                      >
+                        🎉
                       </motion.div>
                     )}
-                  </AnimatePresence>
-                </motion.div>
+                  </div>
+
+                  {/* Bottom Section: Text Info */}
+                  <div className="p-4 text-center">
+                    <h3 className="font-medium text-rose-800 text-lg mb-1">
+                      {gift.title}
+                    </h3>
+                    
+                    <div className="mt-2 flex items-center justify-center gap-1 text-xs text-rose-400">
+                      {isRevealed ? '❤️ Tap to close' : '👆 Tap to unwrap'}
+                    </div>
+
+                    {/* Revealed Content (Only shows if opened) */}
+                    <AnimatePresence>
+                      {isRevealed && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.4, ease: 'easeInOut' }}
+                          className="mt-4 pt-4 border-t border-gray-100"
+                        >
+                          <p className="text-rose-700 font-light text-sm leading-relaxed">
+                            {gift.revealContent}
+                          </p>
+                          <div className="mt-3 text-2xl">
+                            {gift.emoji || '❤️'}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
               </motion.div>
             )
           })}
