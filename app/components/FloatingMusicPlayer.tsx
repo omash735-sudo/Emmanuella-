@@ -30,126 +30,95 @@ export default function FloatingMusicPlayer() {
 
   return (
     <>
+      {/* Toggle Button - Pink Pill Shape */}
       <motion.button
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-r from-rose-400 to-pink-500 text-white shadow-2xl shadow-rose-200/50 flex items-center justify-center text-2xl"
-        whileHover={{ scale: 1.1, rotate: -8 }}
-        whileTap={{ scale: 0.9 }}
+        className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-full bg-gradient-to-r from-pink-400 to-rose-400 text-white shadow-lg shadow-rose-200/50 flex items-center gap-2 font-medium tracking-wide"
+        whileHover={{ scale: 1.05, y: -2 }}
+        whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        initial={{ scale: 0, rotate: 180 }}
-        animate={{ scale: 1, rotate: 0 }}
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        aria-label="Music player"
       >
-        {isOpen ? '✕' : '🎵'}
-        {isPlaying && (
-          <span className="absolute -top-1 -right-1 flex items-end gap-[2px] bg-emerald-400 rounded-full px-1 py-1 h-4">
-            {[0, 1, 2].map((i) => (
-              <motion.span
-                key={i}
-                className="w-[2px] bg-white rounded-full"
-                animate={{ height: [3, 8, 3] }}
-                transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
-              />
-            ))}
-          </span>
-        )}
+        {isOpen ? '✕ Close' : '🎵 Music'}
       </motion.button>
 
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            className="fixed bottom-24 right-6 z-50 w-80 max-w-[calc(100vw-2rem)] glassmorphism rounded-2xl p-6 shadow-2xl shadow-rose-200/30 border border-white/50"
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-24 right-6 z-50 w-80 max-w-[calc(100vw-2rem)] bg-[#3a3a3c] rounded-t-2xl shadow-2xl overflow-hidden flex flex-col"
+            style={{ border: '1px solid rgba(255,255,255,0.1)' }}
           >
-            {currentSong && (
-              <div className="mb-4 p-3 bg-gradient-to-r from-rose-50 to-pink-50 rounded-xl">
+            {/* Dripping top/header */}
+            <div className="relative bg-[#2a2a2c] px-4 py-5 pb-8">
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="text-white/60 text-xs font-medium tracking-wider">iPhone</h3>
+                <span className="text-[10px] text-white/40 font-mono">
+                  {formatTime(getCurrentTime())} / {formatTime(duration)}
+                </span>
+              </div>
+              
+              {currentSong && (
                 <div className="flex items-center gap-3">
-                  <img
-                    src={currentSong.thumbnail}
-                    alt={currentSong.title}
-                    className="w-14 h-14 rounded-lg object-cover shadow-sm"
-                    loading="lazy"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-rose-800 truncate">{currentSong.title}</p>
-                    <p className="text-xs text-rose-500 truncate">{currentSong.artist}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs text-rose-400 font-mono">
-                        {formatTime(getCurrentTime())}
-                      </span>
-                      <div
-                        className="flex-1 h-1 bg-rose-200 rounded-full cursor-pointer relative group"
-                        onClick={handleSeek}
-                      >
-                        <div
-                          className="h-full bg-gradient-to-r from-rose-400 to-pink-500 rounded-full transition-all"
-                          style={{ width: `${progress}%` }}
-                        />
-                      </div>
-                      <span className="text-xs text-rose-400 font-mono">{formatTime(duration)}</span>
-                    </div>
-                  </div>
+                   <img src={currentSong.thumbnail} alt={currentSong.title} className="w-10 h-10 rounded-lg object-cover" />
+                   <div className="flex-1 min-w-0">
+                     <p className="text-white text-sm font-medium truncate">{currentSong.title}</p>
+                     <p className="text-white/50 text-xs truncate">{currentSong.artist}</p>
+                   </div>
+                </div>
+              )}
+
+              {/* Progress Bar */}
+              <div className="mt-3 cursor-pointer group" onClick={handleSeek}>
+                <div className="h-[2px] bg-white/20 rounded-full w-full relative">
+                  <div className="h-full bg-white rounded-full transition-all" style={{ width: `${progress}%` }} />
                 </div>
               </div>
-            )}
-
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-rose-700 font-light text-sm">🎵 Soundtrack</h3>
-              <span className={`text-xs ${isPlaying ? 'text-rose-500' : 'text-rose-300'}`}>
-                {isPlaying ? '▶ Playing' : '⏸ Paused'}
-              </span>
             </div>
 
-            <div className="space-y-3 max-h-52 overflow-y-auto pr-1">
-              {songs.map((song, index) => (
-                <motion.div
-                  key={index}
-                  className={`flex items-center gap-3 p-2.5 rounded-xl cursor-pointer transition-all ${
-                    currentSongIndex === index
-                      ? 'bg-gradient-to-r from-rose-50 to-pink-50 border border-rose-200/50 shadow-sm'
-                      : 'hover:bg-rose-50/50'
-                  }`}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => selectSong(index)}
-                >
-                  <img
-                    src={song.thumbnail}
-                    alt={song.title}
-                    className="w-12 h-12 rounded-lg object-cover shadow-sm"
-                    loading="lazy"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-rose-800 truncate">{song.title}</p>
-                    <p className="text-xs text-rose-500 truncate">{song.artist}</p>
-                  </div>
-                  {currentSongIndex === index && isPlaying && (
-                    <motion.div
-                      className="text-rose-500"
-                      animate={{ scale: [1, 1.3, 1] }}
-                      transition={{ duration: 0.8, repeat: Infinity }}
-                    >
-                      ▶
-                    </motion.div>
-                  )}
-                  {song.isSpecial && (
-                    <span className="text-rose-400 text-sm">❤️</span>
-                  )}
-                </motion.div>
-              ))}
+            {/* Main Player Area - Dark Gray */}
+            <div className="bg-[#3a3a3c] p-4 pt-0">
+               {/* Controls */}
+               <div className="flex justify-center items-center gap-6 py-3 text-white">
+                  <button className="hover:text-white/70 transition-colors"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+                  <button onClick={togglePlay} className="text-2xl hover:scale-110 transition-transform">
+                    {isPlaying ? '⏸' : '▶'}
+                  </button>
+                  <button className="hover:text-white/70 transition-colors"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+               </div>
+
+               {/* Volume Slider */}
+               <div className="flex items-center gap-3 px-1 pb-4 text-xs text-white/50">
+                 <span>🔊</span>
+                 <div className="flex-1 h-[2px] bg-white/20 rounded-full">
+                   <div className="h-full bg-white w-1/2 rounded-full" />
+                 </div>
+                 <span>🔊</span>
+               </div>
+               
+               {/* Dripping bottom decoration */}
+               <div className="absolute bottom-[-20px] left-0 w-full h-8 bg-[#3a3a3c] rounded-[50%] blur-sm opacity-80 pointer-events-none" />
+               <div className="absolute bottom-[-15px] left-1/4 w-4 h-12 bg-[#3a3a3c] rounded-b-full opacity-80 pointer-events-none" />
+               <div className="absolute bottom-[-12px] right-1/3 w-3 h-10 bg-[#3a3a3c] rounded-b-full opacity-80 pointer-events-none" />
             </div>
 
-            <div className="mt-4 pt-4 border-t border-rose-100">
-              <button
-                className="w-full px-4 py-2.5 bg-gradient-to-r from-rose-100 to-pink-100 text-rose-700 rounded-full text-sm hover:from-rose-200 hover:to-pink-200 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                onClick={togglePlay}
-                disabled={!playerReady && currentSongIndex !== null}
-              >
-                {isPlaying ? <><span>⏸</span> Pause</> : <><span>▶</span> Play</>}
-              </button>
+            {/* Playlist Popout (optional) */}
+            <div className="max-h-48 overflow-y-auto bg-[#2a2a2c]/80 backdrop-blur border-t border-white/5">
+               {songs.map((song, idx) => (
+                 <div 
+                   key={idx}
+                   onClick={() => selectSong(idx)}
+                   className={`flex justify-between items-center px-4 py-2 text-xs cursor-pointer hover:bg-white/5 transition-colors ${currentSongIndex === idx ? 'text-pink-400' : 'text-white/60'}`}
+                 >
+                   <span>{song.title}</span>
+                   {currentSongIndex === idx && <span className="text-[8px]">▶</span>}
+                 </div>
+               ))}
             </div>
+
           </motion.div>
         )}
       </AnimatePresence>
