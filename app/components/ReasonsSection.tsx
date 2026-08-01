@@ -46,14 +46,16 @@ export default function ReasonsSection() {
           className="text-center mb-10"
         >
           <h2 className="text-3xl md:text-4xl font-light text-rose-700 mb-3">
-            💕 Reasons I Love You
+            {content.reasons.title}
           </h2>
           <div className="w-16 h-px bg-gradient-to-r from-transparent via-rose-300 to-transparent mx-auto" />
-          <p className="text-sm text-rose-400 mt-3 font-light">Tap each card to see the reason</p>
+          <p className="text-sm text-rose-400 mt-3 font-light">
+            {content.reasons.subtitle}
+          </p>
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {content.reasons.map((reason, index) => {
+          {content.reasons.items.map((reason: string, index: number) => {
             const isFlipped = flipped === index
             
             return (
