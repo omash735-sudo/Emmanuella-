@@ -108,6 +108,12 @@ export default function FloatingMusicPlayer() {
     }
   }
 
+  // Fixed: Added proper type for error handler
+  const handlePlayerError = (e: { target: any; data: any }) => {
+    console.error('YouTube Player Error:', e)
+    setIsPlaying(false)
+  }
+
   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
     if (playerRef.current && duration > 0) {
       const rect = e.currentTarget.getBoundingClientRect()
@@ -340,10 +346,7 @@ export default function FloatingMusicPlayer() {
             }}
             onReady={handlePlayerReady}
             onStateChange={handlePlayerStateChange}
-            onError={(e) => {
-              console.error('YouTube Player Error:', e)
-              setIsPlaying(false)
-            }}
+            onError={handlePlayerError}
             className="w-0 h-0 opacity-0"
           />
         </div>
