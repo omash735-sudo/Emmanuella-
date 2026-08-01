@@ -5,8 +5,11 @@ import { useEffect, useState } from 'react'
 
 export default function LoadingScreen() {
   const [progress, setProgress] = useState(0)
+  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
+    setIsMounted(true)
+    
     const timer = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
@@ -28,6 +31,22 @@ export default function LoadingScreen() {
     size: 10 + Math.random() * 20
   }))
 
+  if (!isMounted) {
+    return (
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-b from-pink-200 to-pink-100">
+        <div className="text-6xl mb-8">🧸</div>
+        <div className="text-center">
+          <h2 className="text-2xl font-light text-pink-700 mb-4">
+            Someone who loves you made something special...
+          </h2>
+          <div className="w-64 h-1 bg-pink-200 rounded-full overflow-hidden mx-auto">
+            <div className="h-full bg-gradient-to-r from-pink-400 to-pink-600 w-0" />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-b from-pink-200 to-pink-100">
       {/* Floating Hearts */}
@@ -37,7 +56,7 @@ export default function LoadingScreen() {
           className="absolute text-pink-400 opacity-30"
           style={{ left: `${heart.left}%`, fontSize: heart.size }}
           animate={{
-            y: [-20, -window.innerHeight],
+            y: [-20, -(typeof window !== 'undefined' ? window.innerHeight : 800)],
             x: [0, (Math.random() - 0.5) * 100],
             rotate: [0, 360]
           }}
