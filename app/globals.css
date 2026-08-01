@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -72,6 +74,11 @@
 }
 
 @layer utilities {
+  /* Bubble Font Utility */
+  .font-bubble {
+    font-family: 'Fredoka One', cursive;
+  }
+
   /* Glassmorphism - Premium */
   .glassmorphism {
     background: rgba(255, 255, 255, 0.6);
