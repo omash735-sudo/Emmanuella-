@@ -18,11 +18,10 @@ export default function GiftCards() {
     )
   }
 
-  // 🎲 "Surprise Me" Function - Makes it lively!
+  // 🎲 "Surprise Me" Function
   const handleSurpriseMe = () => {
     const availableGifts = content.gifts.items.filter(g => !revealedGifts.includes(g.id));
     if (availableGifts.length === 0) {
-      // If all are revealed, reset them all to start over
       setRevealedGifts([]);
       return;
     }
@@ -30,7 +29,6 @@ export default function GiftCards() {
     toggleGift(randomGift.id);
   }
 
-  // Random tilt angles for the Polaroid look
   const getTilt = (index: number) => {
     const tilts = [-3, 2, -4, 3, -2, 4];
     return tilts[index % tilts.length];
@@ -63,7 +61,7 @@ export default function GiftCards() {
           <p className="text-sm text-rose-400 mt-3 font-light">{content.gifts.subtitle}</p>
         </motion.div>
 
-        {/* 🎲 SURPRISE ME BUTTON - Makes it interactive */}
+        {/* SURPRISE ME BUTTON */}
         <div className="flex justify-center mb-10">
           <motion.button
             onClick={handleSurpriseMe}
@@ -76,7 +74,7 @@ export default function GiftCards() {
           </motion.button>
         </div>
 
-        {/* POLAROID GRID - Mimicking the ProductCard structure */}
+        {/* POLAROID GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto">
           {content.gifts.items.map((gift: GiftItem, index: number) => {
             const isRevealed = revealedGifts.includes(gift.id)
@@ -97,20 +95,16 @@ export default function GiftCards() {
                   transition: { duration: 0.2 } 
                 }}
               >
-                {/* The Polaroid Card */}
                 <div 
                   className="relative bg-white rounded-lg shadow-xl overflow-hidden cursor-pointer border border-gray-100 pb-4 transition-shadow hover:shadow-2xl"
                   onClick={() => toggleGift(gift.id)}
                 >
-                  {/* Top Section: The Image / Icon Area */}
                   <div className="relative h-48 sm:h-56 bg-gradient-to-br from-rose-100 to-pink-100 flex items-center justify-center">
-                    {/* Status Badge (Closed/Open) */}
                     <div className={`absolute top-3 left-3 px-2 py-1 rounded-full text-[10px] font-bold z-10 shadow-md flex items-center gap-1 ${isRevealed ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'}`}>
                       {isRevealed ? <Sparkles size={12} /> : <Gift size={12} />}
                       {isRevealed ? 'Opened!' : 'Unopened'}
                     </div>
 
-                    {/* Center Icon */}
                     {!isRevealed ? (
                       <motion.div 
                         className="text-7xl drop-shadow-md"
@@ -130,17 +124,12 @@ export default function GiftCards() {
                     )}
                   </div>
 
-                  {/* Bottom Section: Text Info */}
                   <div className="p-4 text-center">
-                    <h3 className="font-medium text-rose-800 text-lg mb-1">
-                      {gift.title}
-                    </h3>
-                    
+                    <h3 className="font-medium text-rose-800 text-lg mb-1">{gift.title}</h3>
                     <div className="mt-2 flex items-center justify-center gap-1 text-xs text-rose-400">
                       {isRevealed ? '❤️ Tap to close' : '👆 Tap to unwrap'}
                     </div>
 
-                    {/* Revealed Content (Only shows if opened) */}
                     <AnimatePresence>
                       {isRevealed && (
                         <motion.div
@@ -153,9 +142,7 @@ export default function GiftCards() {
                           <p className="text-rose-700 font-light text-sm leading-relaxed">
                             {gift.revealContent}
                           </p>
-                          <div className="mt-3 text-2xl">
-                            {gift.emoji || '❤️'}
-                          </div>
+                          <div className="mt-3 text-2xl">{gift.emoji || '❤️'}</div>
                         </motion.div>
                       )}
                     </AnimatePresence>
