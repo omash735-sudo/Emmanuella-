@@ -1,84 +1,4 @@
-// ✨ All editable content lives here
-// This is the heart of your gift - customize everything below
-
-export interface Song {
-  id: string
-  title: string
-  artist: string
-  videoId: string
-  thumbnail: string
-  isSpecial: boolean
-  specialBadge?: string
-  duration?: string
-  year?: number
-  genre?: string
-}
-
-export interface Photo {
-  id: number
-  src: string
-  caption: string
-  date?: string
-  location?: string
-}
-
-export interface Gift {
-  id: string
-  title: string
-  icon: string
-  revealContent: string
-  color?: string
-  emoji?: string
-}
-
-export interface Credit {
-  label: string
-  value: string
-  isItalic?: boolean
-}
-
-export interface Content {
-  personalMessage: string
-  music: {
-    title: string
-    subtitle: string
-    songs: Song[]
-  }
-  moments: {
-    title: string
-    subtitle: string
-    photos: Photo[]
-  }
-  gifts: {
-    title: string
-    subtitle: string
-    items: Gift[]
-  }
-  reasons: {
-    title: string
-    subtitle: string
-    items: string[]
-  }
-  ending: {
-    title?: string
-    message: string
-    finalWords: string
-  }
-  credits: {
-    title: string
-    items: Credit[]
-    footer: string
-  }
-  branding: {
-    giftTitle: string
-    giftSubtitle: string
-    authorName: string
-    authorEmoji: string
-  }
-}
-
 export const content: Content = {
-  // 💌 Personal Message - The heart of the experience
   personalMessage: `I wish I could spoil you with everything you deserve today, but life has me saving every little bit right now.
 
 So instead, I made something with my time.
@@ -93,49 +13,47 @@ Happy Girlfriend's Day.
 
 I love you.`,
 
-  // 🎵 Music Section - The soundtrack to your story
   music: {
     title: "🎵 Soundtrack To This Little Adventure",
     subtitle: "A playlist made just for you",
     songs: [
       {
-        id: "perfect",
-        title: "Perfect",
-        artist: "Ed Sheeran",
+        id: "her",
+        title: "her",
+        artist: "JVKE",
         videoId: "f5-IY_Ja1RM",
         thumbnail: "https://img.youtube.com/vi/f5-IY_Ja1RM/mqdefault.jpg",
         isSpecial: true,
         specialBadge: "One I think you'll love ❤️",
-        duration: "4:23",
-        year: 2017,
+        duration: "3:00",
+        year: 2024,
         genre: "Pop"
       },
       {
-        id: "all-of-me",
-        title: "All of Me",
-        artist: "John Legend",
-        videoId: "KZGWfHdfWQs",
-        thumbnail: "https://img.youtube.com/vi/KZGWfHdfWQs/mqdefault.jpg",
-        isSpecial: false,
-        duration: "4:29",
-        year: 2013,
-        genre: "R&B"
-      },
-      {
-        id: "thinking-out-loud",
-        title: "Thinking Out Loud",
-        artist: "Ed Sheeran",
+        id: "sweater-weather",
+        title: "Sweater Weather",
+        artist: "The Neighbourhood",
         videoId: "GCdwKhTtNNw",
         thumbnail: "https://img.youtube.com/vi/GCdwKhTtNNw/mqdefault.jpg",
         isSpecial: false,
-        duration: "4:41",
-        year: 2014,
-        genre: "Pop"
+        duration: "4:00",
+        year: 2013,
+        genre: "Indie Pop"
+      },
+      {
+        id: "sailor-song",
+        title: "Sailor Song",
+        artist: "Gigi Perez",
+        videoId: "KZGWfHdfWQs",
+        thumbnail: "https://img.youtube.com/vi/KZGWfHdfWQs/mqdefault.jpg",
+        isSpecial: false,
+        duration: "3:31",
+        year: 2024,
+        genre: "Indie Pop"
       }
     ]
   },
 
-  // 📸 Moments Section - Captured memories
   moments: {
     title: "✨ Moments I Fell In Love With You",
     subtitle: "A collection of my favorite memories",
@@ -178,7 +96,6 @@ I love you.`,
     ]
   },
 
-  // 🎁 Gifts Section - Surprises waiting to be opened
   gifts: {
     title: "🎁 Your Gifts Are Waiting",
     subtitle: "Tap to unwrap each surprise",
@@ -210,7 +127,6 @@ I love you.`,
     ]
   },
 
-  // 💕 Reasons Section - Why I love you
   reasons: {
     title: "💕 Reasons I Love You",
     subtitle: "Tap each card to see the reason",
@@ -226,7 +142,6 @@ I love you.`,
     ]
   },
 
-  // 🌅 Ending Scene - The final message
   ending: {
     title: "A Love Letter",
     message: `Thank you for loving me through every season.
@@ -237,7 +152,6 @@ But one thing I'll always know is how much you mean to me.`,
     finalWords: "I love you ❤️"
   },
 
-  // 🎬 Credits - Movie-style ending
   credits: {
     title: "❤️ The End ❤️",
     items: [
@@ -249,7 +163,6 @@ But one thing I'll always know is how much you mean to me.`,
     footer: "Made with love • 2025"
   },
 
-  // 🏷️ Branding - Your personal touch
   branding: {
     giftTitle: "Happy Girlfriend's Day",
     giftSubtitle: "A digital storybook of memories, music, and surprises",
@@ -257,23 +170,3 @@ But one thing I'll always know is how much you mean to me.`,
     authorEmoji: "❤️"
   }
 }
-
-// Helper function to get all photo URLs
-export const getPhotoUrls = () => content.moments.photos.map(p => p.src)
-
-// Helper function to get all song video IDs
-export const getVideoIds = () => content.music.songs.map(s => s.videoId)
-
-// Helper function to get special song
-export const getSpecialSong = () => content.music.songs.find(s => s.isSpecial)
-
-// Helper function to get total gifts count
-export const getGiftsCount = () => content.gifts.items.length
-
-// Helper function to get total photos count
-export const getPhotosCount = () => content.moments.photos.length
-
-// Export type for component usage
-export type SongType = typeof content.music.songs[0]
-export type PhotoType = typeof content.moments.photos[0]
-export type GiftType = typeof content.gifts.items[0]
