@@ -1,170 +1,180 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useEffect, useState, useRef } from 'react'
 
-export default function LoadingScreen() {
+interface LoadingScreenProps {
+  onContinue: () => void
+}
+
+export default function LoadingScreen({ onContinue }: LoadingScreenProps) {
   const [progress, setProgress] = useState(0)
-  const [isMounted, setIsMounted] = useState(false)
+  const [phase, setPhase] = useState<'loading' | 'complete'>('loading')
+  const startTime = useRef<number | null>(null)
+  const rafId = useRef<number | null>(null)
 
   useEffect(() => {
-    setIsMounted(true)
-    
-    const timer = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(timer)
-          return 100
-        }
-        return prev + 1.5
-      })
-    }, 25)
+    const TOTAL_MS = 2800
 
-    return () => clearInterval(timer)
+    const tick = (now: number) => {
+      if (startTime.current === null) startTime.current = now
+      const elapsed = now - startTime.current
+      const t = Math.min(elapsed / TOTAL_MS, 1)
+      const eased = 1 - Math.pow(1 - t, 3)
+      setProgress(Math.round(eased * 100))
+
+      if (t < 1) {
+        rafId.current = requestAnimationFrame(tick)
+      } else {
+        setPhase('complete')
+      }
+    }
+
+    rafId.current = requestAnimationFrame(tick)
+    return () => {
+      if (rafId.current) cancelAnimationFrame(rafId.current)
+    }
   }, [])
 
-  if (!isMounted) {
-    return (
-      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-b from-rose-100 via-pink-100 to-rose-50">
-        <div className="text-7xl mb-8">🧸</div>
-      </div>
-    )
-  }
-
-  // Floating elements
-  const floatingElements = [
-    { icon: '❤️', size: 'text-3xl', left: '5%', delay: 0, duration: 4 },
-    { icon: '✨', size: 'text-2xl', left: '15%', delay: 0.5, duration: 3.5 },
-    { icon: '💕', size: 'text-4xl', left: '25%', delay: 1, duration: 5 },
-    { icon: '🌸', size: 'text-3xl', left: '40%', delay: 0.3, duration: 4.5 },
-    { icon: '✨', size: 'text-2xl', left: '55%', delay: 0.8, duration: 3.8 },
-    { icon: '❤️', size: 'text-3xl', left: '70%', delay: 0.2, duration: 4.2 },
-    { icon: '💗', size: 'text-4xl', left: '82%', delay: 0.6, duration: 5.5 },
-    { icon: '✨', size: 'text-2xl', left: '92%', delay: 0.9, duration: 3.2 },
-  ]
-
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-b from-rose-100 via-pink-100 to-rose-50 overflow-hidden">
-      {/* Floating Elements */}
-      {floatingElements.map((el, i) => (
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-b from-rose-100 via-pink-100 to-rose-50 overflow-hidden px-6">
+      {[...Array(10)].map((_, i) => (
         <motion.div
           key={i}
-          className={`absolute ${el.size} opacity-30`}
-          style={{ left: el.left, top: '-10%' }}
+          className="absolute text-xl md:text-2xl opacity-20 pointer-events-none"
+          style={{ left: `${5 + i * 9.5}%`, top: '-8%' }}
           animate={{
-            y: ['0vh', '110vh'],
-            x: [0, (Math.random() - 0.5) * 60],
-            rotate: [0, 180, 360],
-            scale: [0.8, 1.2, 0.8]
+            y: ['0vh', '115vh'],
+            x: [0, (i % 2 === 0 ? 1 : -1) * (20 + (i % 3) * 15)],
+            rotate: [0, 360],
           }}
           transition={{
-            duration: el.duration + Math.random() * 2,
-            delay: el.delay,
+            duration: 6 + (i % 4),
+            delay: i * 0.4,
             repeat: Infinity,
-            ease: "linear"
+            ease: 'linear',
           }}
         >
-          {el.icon}
+          {i % 3 === 0 ? '✨' : i % 3 === 1 ? '❤️' : '🌸'}
         </motion.div>
       ))}
 
-      {/* Glow Effect */}
-      <div className="absolute inset-0 bg-gradient-to-t from-pink-200/20 via-transparent to-transparent pointer-events-none" />
-
-      {/* Main Content */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative z-10 flex flex-col items-center"
-      >
-        {/* Teddy Bear with Heart */}
-        <motion.div
-          className="relative"
-          animate={{
-            y: [0, -20, 0],
-            rotate: [-3, 3, -3]
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        >
-          <div className="text-8xl md:text-9xl">🧸</div>
-          <motion.div
-            className="absolute -top-2 -right-2 text-3xl"
-            animate={{
-              scale: [1, 1.3, 1],
-              rotate: [0, 10, -10, 0]
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          >
-            ❤️
-          </motion.div>
-        </motion.div>
-
-        {/* Loading Text */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="text-center mt-8 px-6"
-        >
-          <h2 className="text-xl md:text-2xl font-light text-rose-700 leading-relaxed max-w-sm">
-            Someone who loves you
-            <br />
-            made something special...
-          </h2>
-        </motion.div>
-
-        {/* Progress Bar */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="mt-8 w-64 md:w-80"
-        >
-          <div className="h-1 bg-rose-200 rounded-full overflow-hidden">
+      <div className="relative z-10 flex flex-col items-center max-w-sm w-full">
+        <AnimatePresence mode="wait">
+          {phase === 'loading' ? (
             <motion.div
-              className="h-full bg-gradient-to-r from-rose-300 via-pink-400 to-rose-300"
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.3 }}
-            />
-          </div>
-          <p className="text-center text-xs text-rose-400 mt-3 tracking-wider">
-            {Math.min(progress, 100)}%
-          </p>
-        </motion.div>
+              key="loading"
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="flex flex-col items-center"
+            >
+              <div style={{ perspective: 800 }} className="mb-2">
+                <motion.div
+                  animate={{ rotateY: [0, 360] }}
+                  transition={{ duration: 3.2, repeat: Infinity, ease: 'linear' }}
+                  style={{ transformStyle: 'preserve-3d' }}
+                  className="relative"
+                >
+                  <motion.div
+                    animate={{ y: [0, -14, 0] }}
+                    transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+                    className="relative w-[92px] h-[82px]"
+                  >
+                    <span
+                      className="absolute left-[46px] w-[46px] h-[74px] rounded-t-full"
+                      style={{
+                        background: 'linear-gradient(135deg, #FF8FB3, #FF3D7F)',
+                        transform: 'rotate(-45deg)',
+                        transformOrigin: '0 100%',
+                        boxShadow: '0 0 40px rgba(255,61,127,0.5)',
+                      }}
+                    />
+                    <span
+                      className="absolute left-0 w-[46px] h-[74px] rounded-t-full"
+                      style={{
+                        background: 'linear-gradient(225deg, #FF8FB3, #FF3D7F)',
+                        transform: 'rotate(45deg)',
+                        transformOrigin: '100% 100%',
+                        boxShadow: '0 0 40px rgba(255,61,127,0.5)',
+                      }}
+                    />
+                  </motion.div>
+                </motion.div>
+                <motion.div
+                  className="mx-auto mt-2 w-16 h-3 rounded-full bg-rose-300/40 blur-md"
+                  animate={{ scale: [1, 1.3, 1], opacity: [0.4, 0.7, 0.4] }}
+                  transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+                />
+              </div>
 
-        {/* Sparkle Particles */}
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={`sparkle-${i}`}
-            className="absolute text-2xl text-rose-300/30"
-            style={{
-              left: `${15 + Math.random() * 70}%`,
-              top: `${10 + Math.random() * 80}%`
-            }}
-            animate={{
-              scale: [0, 1, 0],
-              opacity: [0, 0.5, 0]
-            }}
-            transition={{
-              duration: 2 + Math.random() * 2,
-              delay: Math.random() * 3,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          >
-            ✨
-          </motion.div>
-        ))}
-      </motion.div>
+              <motion.h2
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="text-lg md:text-xl font-light text-rose-700 text-center mt-6 leading-relaxed"
+              >
+                Someone who loves you
+                <br />
+                made something special...
+              </motion.h2>
+
+              <div className="mt-8 w-56 md:w-64">
+                <div className="h-1 bg-rose-200 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-rose-300 via-pink-400 to-rose-400 rounded-full transition-[width] duration-100 ease-out"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+                <p className="text-center text-xs text-rose-400 mt-3 tracking-wider font-mono">
+                  {progress}%
+                </p>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="complete"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="flex flex-col items-center text-center"
+            >
+              <motion.div
+                animate={{ scale: [1, 1.15, 1] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                className="text-6xl mb-6"
+              >
+                ❤️
+              </motion.div>
+              <p className="text-lg md:text-xl font-light text-rose-700 leading-relaxed max-w-xs">
+                Thank you for waiting. I hope you enjoy this little gift.
+                <br />
+                <span className="text-rose-500">With love, your man. ❤️</span>
+              </p>
+
+              <motion.button
+                onClick={onContinue}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.94 }}
+                className="mt-10 flex flex-col items-center gap-2 text-rose-500"
+                aria-label="Continue"
+              >
+                <span className="text-xs tracking-widest uppercase text-rose-400">
+                  Tap to continue
+                </span>
+                <motion.span
+                  className="text-3xl"
+                  animate={{ y: [0, 8, 0] }}
+                  transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  ↓
+                </motion.span>
+              </motion.button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   )
 }
