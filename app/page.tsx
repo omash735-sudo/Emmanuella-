@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion' // Import this!
+import { motion } from 'framer-motion' // Needed for the smooth fade
 import LoadingScreen from './components/LoadingScreen'
 import IntroSection from './components/IntroSection'
 import PersonalMessage from './components/PersonalMessage'
@@ -31,6 +31,7 @@ export default function Home() {
       )}
 
       {phase === 'experience' && (
+        /* This motion div prevents the "white flash" on mobile */
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -40,13 +41,24 @@ export default function Home() {
             <IntroSection />
             <PersonalMessage />
             <MusicSection />
-            {/* Added id="memories" for the bear to find */}
-            <section id="memories"><MomentsSection /></section>
-            {/* Added id="surprises" for the bear to find */}
-            <section id="surprises"><GiftCards /></section>
+            
+            {/* WRAPPED WITH ID FOR TEDDY BEAR #1 */}
+            <section id="memories">
+              <MomentsSection />
+            </section>
+
+            {/* WRAPPED WITH ID FOR TEDDY BEAR #2 */}
+            <section id="surprises">
+              <GiftCards />
+            </section>
+
             <ReasonsSection />
-            {/* Added id="more" for the bear to find */}
-            <section id="more"><EndingScene /></section>
+
+            {/* WRAPPED WITH ID FOR TEDDY BEAR #3 */}
+            <section id="more">
+              <EndingScene />
+            </section>
+
             <PostCredits />
             <FloatingMusicPlayer />
           </main>
