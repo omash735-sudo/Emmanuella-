@@ -8,9 +8,16 @@ export default function FloatingMusicPlayer() {
   const [isOpen, setIsOpen] = useState(false)
   const [currentSong, setCurrentSong] = useState<number | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   // Keyboard shortcut: Space to toggle
   useEffect(() => {
+    if (!isMounted) return
+    
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === ' ' && isOpen) {
         e.preventDefault()
@@ -20,7 +27,11 @@ export default function FloatingMusicPlayer() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, isPlaying])
+  }, [isMounted, isOpen, isPlaying])
+
+  if (!isMounted) {
+    return null
+  }
 
   return (
     <>
