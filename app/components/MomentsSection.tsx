@@ -21,41 +21,52 @@ export default function MomentsSection() {
           <p className="text-sm text-rose-400 mt-3 font-light">{content.moments.subtitle}</p>
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
+        {/* Staggered Grid for "Liveliness" */}
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={{
+            visible: { transition: { staggerChildren: 0.15 } } // Cascading effect
+          }}
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6"
+        >
           {content.moments.photos.map((photo: Photo, index: number) => {
-            const rotation = (index - 1) * 4 - 4; 
+            const rotation = (index - 1) * 3 - 3; 
             return (
               <motion.div
                 key={photo.id}
-                initial={{ opacity: 0, scale: 0.9, rotate: rotation * 1.5 }}
-                whileInView={{ opacity: 1, scale: 1, rotate: rotation }}
-                transition={{ duration: 0.5, delay: index * 0.08 }}
-                viewport={{ once: true }}
+                variants={{
+                  hidden: { opacity: 0, scale: 0.8, rotate: rotation * 2, y: 20 },
+                  visible: { opacity: 1, scale: 1, rotate: rotation, y: 0 }
+                }}
+                transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
                 whileHover={{ scale: 1.05, rotate: 0, y: -8 }}
-                className="relative flex flex-col items-center"
+                className="relative flex flex-col items-center w-full"
               >
-                {/* Pink Clothespin (Styled to look like reference) */}
-                <div className="absolute -top-6 z-10 w-6 h-10 bg-gradient-to-b from-pink-300 to-pink-400 rounded-t-xl shadow-sm rotate-6 flex flex-col items-center justify-center border-[1px] border-pink-400/40">
-                   <div className="w-3 h-3 rounded-full bg-white/50 mb-1 border border-pink-300" />
-                   <div className="w-4 h-1 bg-pink-500/30 rounded-full" />
+                {/* Pink Clothespin */}
+                <div className="absolute -top-5 z-10 w-5 h-9 bg-gradient-to-b from-pink-300 to-pink-400 rounded-t-xl shadow-sm rotate-6 flex flex-col items-center justify-center border-[1px] border-pink-400/40">
+                   <div className="w-2.5 h-2.5 rounded-full bg-white/50 mb-1 border border-pink-300" />
+                   <div className="w-3.5 h-0.5 bg-pink-500/30 rounded-full" />
                 </div>
 
+                {/* Polaroid Card */}
                 <motion.div 
-                  className="bg-white rounded-sm shadow-xl p-2 pb-6 relative"
+                  className="bg-white rounded-sm shadow-xl p-2 pb-4 relative w-full aspect-[3/4] flex flex-col"
                   style={{ boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)" }}
                 >
-                  <div className="relative overflow-hidden rounded-sm aspect-[3/4] bg-rose-50 w-full max-w-[150px]">
+                  <div className="relative overflow-hidden rounded-sm flex-1 bg-rose-50 w-full">
                     <img src={photo.src} alt={photo.caption} className="w-full h-full object-cover" loading="lazy" />
                   </div>
-                  <div className="mt-2 text-center px-1">
-                    <p className="text-rose-700 font-medium text-[10px] tracking-wide uppercase">{photo.caption}</p>
-                    <p className="text-rose-400 text-[8px] mt-1">{photo.location}</p>
+                  <div className="mt-2 text-center px-1 flex flex-col justify-end">
+                    <p className="text-rose-700 font-semibold text-[10px] tracking-wide uppercase truncate">{photo.caption}</p>
+                    <p className="text-rose-400 text-[8px] mt-0.5 truncate">{photo.location}</p>
                   </div>
                 </motion.div>
               </motion.div>
             )
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   )
