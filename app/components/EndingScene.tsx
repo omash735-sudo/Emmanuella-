@@ -4,7 +4,8 @@ import { motion } from 'framer-motion'
 import { content } from '@/config/content'
 
 export default function EndingScene() {
-  const messages = content.endingMessage.split('\n\n')
+  // Fixed: Use content.ending.message instead of endingMessage
+  const messages = content.ending.message.split('\n\n')
 
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 py-16 overflow-hidden">
@@ -62,7 +63,8 @@ export default function EndingScene() {
         viewport={{ once: true }}
         className="relative z-10 max-w-2xl text-center px-4"
       >
-        {messages.map((message, index) => (
+        {/* Fixed: Added proper types for message and index */}
+        {messages.map((message: string, index: number) => (
           <motion.p
             key={index}
             initial={{ opacity: 0, y: 30 }}
@@ -105,42 +107,8 @@ export default function EndingScene() {
           }}
         >
           <p className="text-sm text-rose-400 tracking-wider font-light">
-            Forever yours
+            {content.ending.finalWords}
           </p>
-        </motion.div>
-
-        {/* Cinematic Sparkle */}
-        <motion.div
-          className="absolute -top-10 -right-10 text-4xl text-yellow-300/30"
-          animate={{
-            scale: [0, 1, 0],
-            opacity: [0, 0.5, 0],
-            rotate: [0, 360]
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            delay: 1,
-            ease: "easeInOut"
-          }}
-        >
-          ✨
-        </motion.div>
-        <motion.div
-          className="absolute -bottom-10 -left-10 text-4xl text-yellow-300/30"
-          animate={{
-            scale: [0, 1, 0],
-            opacity: [0, 0.5, 0],
-            rotate: [0, 360]
-          }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            delay: 2,
-            ease: "easeInOut"
-          }}
-        >
-          ✨
         </motion.div>
       </motion.div>
     </section>
